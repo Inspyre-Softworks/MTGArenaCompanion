@@ -7,7 +7,6 @@ from MTGArenaCompanion.GUI import GUI
 
 WIN_TITLE = 'Create New Deck'
 
-
 class AddDeckWin(GUI):
     max_num_cards = 1000
     land_types = []
@@ -21,7 +20,8 @@ class AddDeckWin(GUI):
 
     def __composition_frame__(self):
         _ = [
-            [Qt.Spin(range(1000), initial_value=self.card_total, key='TOTAL_NUM', enable_events=True)],
+            [Qt.Spin(range(1000), initial_value=self.card_total, key='TOTAL_NUM', enable_events=True),
+             Qt.Text('Number of cards in deck', key='TOTAL_NUM_LABEL')],
             [Qt.Spin([i for i in range(self.card_total)], initial_value=0,
                      key='SWAMP_TOTAL', enable_events=True, visible=False),
              Qt.Text('Number of swamps', key='SWAMP_TOTAL_LABEL', visible=False)],
@@ -33,7 +33,9 @@ class AddDeckWin(GUI):
              Qt.Text('Number of plains', key='PLAINS_TOTAL_LABEL', visible=False)],
             [Qt.Spin([i for i in range(self.card_total)], initial_value=0,
                      key='MOUNTAIN_TOTAL', enable_events=True, visible=False),
-             Qt.Text('Number of mountains', key='MOUNTAIN_TOTAL_LABEL', visible=False)]
+             Qt.Text('Number of mountains', key='MOUNTAIN_TOTAL_LABEL', visible=False)],
+            [Qt.Text('', key='TOTAL_LANDS', visible=False),
+             Qt.Text('Lands in Total', visible=False, key='TOTAL_LANDS_LABEL')]
         ]
 
         return _
@@ -57,6 +59,7 @@ class AddDeckWin(GUI):
 
     def __layout__(self):
         main = [
+            [Qt.Menu(self.main_menu)],
             [Qt.Frame('Deck Name', layout=self.__name_frame__())],
             [Qt.Frame('Mana Utilization', layout=self.__mana_frame__())],
             [Qt.Frame('Deck Composition', layout=self.__composition_frame__(), key='DECK_COMP_FRAME')],
@@ -111,11 +114,11 @@ class AddDeckWin(GUI):
                     parser.write(config)
 
     def __init__(self):
-        super().__init__()
         data_dir = Path('~/Inspyre-Softworks/MTGArena-Companion/data').expanduser()
         makedirs(data_dir, exist_ok=True)
         self.title = 'Add New Deck'
         self.card_total = 60
         self.land_total = 30
         self.window = Qt.Window('Deck Creator', layout=self.__layout__())
+        print(self.log_name)
 

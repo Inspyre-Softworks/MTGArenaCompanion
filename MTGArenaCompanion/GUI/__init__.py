@@ -1,9 +1,19 @@
 import PySimpleGUIQt as Qt
 
+from inspy_logger import InspyLogger
+
+from MTGArenaCompanion.GUI.menus import main_menu_struct
+
 
 class GUI(object):
+    import inspy_logger
+
+    log_name = 'MTGArenaCompanion.GUI'
+    log_device = InspyLogger(log_name, 'debug')
+    log = log_device.start()
 
     active_windows = []
+    main_menu = main_menu_struct
 
     def check_if_active(self, win_title):
         if win_title in self.active_windows:
@@ -27,6 +37,7 @@ class GUI(object):
 
     def __init__(self):
         pass
+
 
 gui = GUI()
 gui.active_windows.append('SomeWindow')
