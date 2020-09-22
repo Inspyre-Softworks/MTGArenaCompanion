@@ -10,6 +10,7 @@ imwatchingyou = "*"
 mtgarenacompanion = {editable = true, path = "."}
 pysimpleguiqt = "*"
 inspy-logger = "==2.0.0a.6"
+coverage = "*"
 
 [requires]
 python_version = "3.6"

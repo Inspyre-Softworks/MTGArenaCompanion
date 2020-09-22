@@ -35,7 +35,7 @@ class StartWindow(GUI):
         buttons_not_implemented = ['START_NEW_BUTTON', 'PREFERENCES_BUTTON', 'MANAGE_DECKS_BUTTON', 'VIEW_STATS_BUTTON']
 
         while True:
-            event, vals = window.read(timeout=100)
+            event, vals = window.read(timeout=10)
 
             if not '__timeout__'.upper() in event:
                 event = event.upper().replace(' ', '_')
@@ -80,12 +80,15 @@ class StartWindow(GUI):
                     window.un_hide()
 
             if event == 'TIMER':
-                timer.Timer()
+                if not self.check_if_active(timer.WIN_TITLE):
+                    self.add_active(timer.WIN_TITLE)
+                    duel_track_win = timer.MainGameWin()
+                    window.hide()
+                    duel_track_win.run()
+                    self.rem_active(timer.WIN_TITLE)
+                    window.un_hide()
 
     def __init__(self):
         self.swin_logname = self.log_name + '.' + WIN_TITLE.replace(' ', '')
         self.swin_log = self.inspy_logger.getLogger(self.swin_logname)
 
-
-start_win = StartWindow()
-start_win.run_window()

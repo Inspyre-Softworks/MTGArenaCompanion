@@ -77,7 +77,7 @@ class AddDeckWin(GUI):
         all_land_types = ['SWAMP', 'MOUNTAIN', 'ISLAND', 'PLAINS']
 
         while self.check_if_active(WIN_TITLE):
-            event, vals = self.window.read(timeout=100)
+            event, vals = self.window.read(timeout=10)
 
             if event == 'CANCEL_BUTTON' or event is None:
                 print('User pressed the cancel button!')

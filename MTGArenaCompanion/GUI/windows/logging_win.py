@@ -25,7 +25,7 @@ class LoggingWin(GUI):
         cur_lvl = None
 
         while True:
-            event, vals = window.read(timeout=100)
+            event, vals = window.read(timeout=10)
 
             if event is None:
                 break

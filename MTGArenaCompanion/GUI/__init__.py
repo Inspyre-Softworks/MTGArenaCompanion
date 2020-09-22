@@ -1,16 +1,17 @@
 import PySimpleGUIQt as Qt
-
+import inspy_logger
 from inspy_logger import InspyLogger
 
+from MTGArenaCompanion import MTGACApp
 from MTGArenaCompanion.GUI.menus import main_menu_struct
 
 
-class GUI(object):
-    import inspy_logger
-
+class GUI(MTGACApp):
+    inspy_logger = inspy_logger
+    #
     log_name = 'MTGArenaCompanion.GUI'
-    log_device = InspyLogger(log_name, 'debug')
-    log = log_device.start()
+    # log_device = InspyLogger(log_name, 'debug')
+    # log = log_device.start()
 
     active_windows = []
     main_menu = main_menu_struct
@@ -37,16 +38,3 @@ class GUI(object):
 
     def __init__(self):
         pass
-
-
-gui = GUI()
-gui.active_windows.append('SomeWindow')
-if gui.check_if_active('SomeWindow'):
-    print('Test successful')
-
-gui.active_windows.append('AnotherWindow')
-gui.active_windows.append('YetAnother')
-print(gui.active_windows)
-gui.rem_active('YetAnother')
-print(gui.active_windows)
-
