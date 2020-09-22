@@ -3,8 +3,11 @@ from os import makedirs
 
 C_CONFIG_DIR = str(Path("~/.config/Inspyre-Softworks/mtgac.env").expanduser())
 
+default_app_dir = str(Path('~/Inspyre-Softworks/MTGArena Companion').expanduser())
+
 defaults = {
-    'data_dir': str(Path("~/Inspyre-Softworks/MTGArena Companion/data/test_folder").expanduser())
+    'conf_dir': str(Path(default_app_dir + "/conf")),
+    'data_dir': str(Path(default_app_dir + "/data"))
 }
 
 print(defaults)
