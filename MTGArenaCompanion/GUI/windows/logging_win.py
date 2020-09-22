@@ -1,13 +1,15 @@
 from MTGArenaCompanion.GUI import GUI, Qt
 
-class LoggingWin(GUI):
 
+class LoggingWin(GUI):
     WIN_TITLE = 'Logging Settings'
 
     def __frame_layout_1__(self):
         radio_grp = 'LOGGING_LEVEL'
         _ = [
-            [Qt.Radio('Debug', radio_grp, enable_events=True, key=radio_grp + '.debug'), Qt.Radio('Info', radio_grp, enable_events=True, key=radio_grp + '.info'), Qt.Radio('Warning', radio_grp, enable_events=True, key=radio_grp + '.warning')]
+            [Qt.Radio('Debug', radio_grp, enable_events=True, key=radio_grp + '.debug'),
+             Qt.Radio('Info', radio_grp, enable_events=True, key=radio_grp + '.info'),
+             Qt.Radio('Warning', radio_grp, enable_events=True, key=radio_grp + '.warning')]
         ]
         return _
 
@@ -51,4 +53,3 @@ class LoggingWin(GUI):
                 if not cur_lvl == 'warning':
                     self.log_device.adjust_level('warning')
                     cur_lvl = 'warning'
-

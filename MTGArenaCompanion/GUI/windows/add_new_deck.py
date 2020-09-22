@@ -1,11 +1,13 @@
-import PySimpleGUIQt as Qt
 from configparser import ConfigParser
-from pathlib import Path
 from os import makedirs
+from pathlib import Path
+
+import PySimpleGUIQt as Qt
 
 from MTGArenaCompanion.GUI import GUI
 
 WIN_TITLE = 'Create New Deck'
+
 
 class AddDeckWin(GUI):
     max_num_cards = 1000
@@ -121,4 +123,3 @@ class AddDeckWin(GUI):
         self.land_total = 30
         self.window = Qt.Window('Deck Creator', layout=self.__layout__())
         print(self.log_name)
-

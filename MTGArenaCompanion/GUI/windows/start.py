@@ -1,4 +1,5 @@
 import PySimpleGUIQt as Qt
+
 from MTGArenaCompanion.GUI import GUI
 from MTGArenaCompanion.GUI.windows import add_new_deck, logging_win, timer
 
@@ -91,4 +92,3 @@ class StartWindow(GUI):
     def __init__(self):
         self.swin_logname = self.log_name + '.' + WIN_TITLE.replace(' ', '')
         self.swin_log = self.inspy_logger.getLogger(self.swin_logname)
-

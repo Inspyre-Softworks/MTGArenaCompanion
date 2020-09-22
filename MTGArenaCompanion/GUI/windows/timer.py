@@ -1,12 +1,12 @@
-from MTGArenaCompanion.GUI import GUI, Qt, inspy_logger
 import time
+
+from MTGArenaCompanion.GUI import GUI, Qt
 
 WIN_TITLE = 'Duel Tracker'
 
 
 class MainGameWin(GUI):
-
-    window=None
+    window = None
 
     pause_button_text = "Start"
 
@@ -30,7 +30,8 @@ class MainGameWin(GUI):
         while True:
             event, vals = self.window.read(timeout=10)
 
-            self.window['TIMER_DISPLAY'].update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+            self.window['TIMER_DISPLAY'].update(
+                '{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
 
             if not paused:
                 i += 1
@@ -53,8 +54,6 @@ class MainGameWin(GUI):
                 break
 
             self.window['PAUSE_BUTTON'].update('Start' if paused else 'Pause')
-
-
 
 # Basic timer in PQt
 
