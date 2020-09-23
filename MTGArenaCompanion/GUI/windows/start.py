@@ -30,7 +30,7 @@ class StartWindow(GUI):
         log_name = self.swin_logname + '.run_window'
         log = self.inspy_logger.getLogger(log_name)
 
-        Qt.theme('DarkAmber')
+        Qt.theme('Material2')
 
         window = Qt.Window('MTGArena Companion - ' + WIN_TITLE, layout=self.__button_frame__(), force_toplevel=True,
                            keep_on_top=True, no_titlebar=True, grab_anywhere=True)
