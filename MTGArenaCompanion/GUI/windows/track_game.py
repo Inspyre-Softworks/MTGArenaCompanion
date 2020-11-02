@@ -1,22 +1,32 @@
 import time
+from threading import Thread
+from time import time, sleep
 
 from MTGArenaCompanion.GUI import GUI, Qt
+from MTGArenaCompanion.duel_track.timers import Timer
 
-WIN_TITLE = 'Duel Tracker'
+WIN_TITLE = 'Duel In Progress'
 
 
 class MainGameWin(GUI):
     window = None
 
-    pause_button_text = "Start"
+    game_timer = Timer()
+
+    pause_button_text = "Pause"
+
+    blank_timer = '00:00:00'
 
     def __timer_frame_layout__(self):
         _ = [
             [
-                Qt.Button(self.pause_button_text, key='PAUSE_BUTTON'),
-                Qt.Text(size=(15, 4), font=('Helvetica', 20), justification='center', key='TIMER_DISPLAY'),
-                Qt.Button('Reset', key='RESET_BUTTON')
-            ]
+                Qt.Button(self.pause_button_text, key='PAUSE_BUTTON', visible=False),
+                Qt.Text(self.blank_timer, size=(15, 4), font=('Helvetica', 18), justification='center',
+                        key='TIMER_DISPLAY', pad=(10, 10),
+                        relief=Qt.RELIEF_SUNKEN),
+                Qt.Button('Reset', key='RESET_BUTTON', visible=False)
+            ],
+            [Qt.Button('Start Timer', enable_events=True, key='START_TIMER_BUTTON')]
         ]
 
         return _
@@ -65,7 +75,7 @@ class MainGameWin(GUI):
 
     def __main_frame__(self):
         _ = [
-            [Qt.Frame('', layout=self.__timer_frame_layout__())],
+            [Qt.Frame('', layout=self.__timer_frame_layout__(), )],
             [Qt.Frame('Opponent\'s Endgame State:', layout=self.__opp_frame__())],
             [Qt.Frame('Player\'s Endgame State:', layout=self.__player_frame__())],
             [Qt.Frame('', layout=self.__button_frame__())]
@@ -81,15 +91,10 @@ class MainGameWin(GUI):
         return _
 
     def run(self):
-        self.window = Qt.Window(WIN_TITLE, layout=self.__layout__(), alpha_channel=.8, return_keyboard_events=True, grab_anywhere=True, no_titlebar=True)
-
-        i = 0
+        self.window = Qt.Window(WIN_TITLE, layout=self.__layout__(), alpha_channel=.8, return_keyboard_events=True,
+                                grab_anywhere=True, no_titlebar=True, size=(800, 800))
 
         paused = True
-
-        start_time: int = int(round(time.time() * 100))
-
-        print(start_time)
 
         while True:
             event, vals = self.window.read(timeout=10)
@@ -98,19 +103,20 @@ class MainGameWin(GUI):
                 self.window.close()
                 break
 
-            self.window['TIMER_DISPLAY'].update(
-                '{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
+            if event == 'START_TIMER_BUTTON':
+                self.game_timer.run()
+                paused = False
+                self.window['START_TIMER_BUTTON'].update(visible=False)
+                self.window['RESET_BUTTON'].update(visible=True)
+                self.pause_button_text = 'Pause'
+                self.window['PAUSE_BUTTON'].update(self.pause_button_text, visible=True)
+                self.window.refresh()
 
             if 'timeout' not in event.lower():
                 print(event)
 
             if not paused:
-                i += 1
-                if event == 'PAUSE_BUTTON':
-                    paused = True
-            else:
-                if event == 'PAUSE_BUTTON':
-                    paused = False
+                self.window['TIMER_DISPLAY'].update(self.game_timer.get_elapsed())
 
             if event == 'RESET_BUTTON':
                 paused = True
@@ -124,12 +130,24 @@ class MainGameWin(GUI):
                 self.window['OPP_CONCEDE_RADIO'].update(visible=True)
                 paused = True if vals['OPP_LOST_RADIO'] else False
 
+
             self.window['PAUSE_BUTTON'].update('Start' if paused else 'Pause')
             if event == 'OPPONENT_LIFE_INPUT' or event == 'OPP_LOST_RADIO':
                 if not vals['OPPONENT_LIFE_INPUT'] == '':
-                    if int(vals['OPPONENT_LIFE_INPUT']) >= 1 and vals['OPP_LOST_RADIO']:
-                        self.window['OPP_DECKED_RADIO'].update(visible=True)
-                        self.window['OPP_CONCEDE_RADIO'].update(visible=True)
-                    else:
-                        self.window['OPP_CONCEDE_RADIO'].update(visible=False)
-                        self.window['OPP_DECKED_RADIO'].update(visible=False)
+                    try:
+                        if int(vals['OPPONENT_LIFE_INPUT']) >= 1 and vals['OPP_LOST_RADIO']:
+                            self.window['OPP_DECKED_RADIO'].update(visible=True)
+                            self.window['OPP_CONCEDE_RADIO'].update(visible=True)
+                        else:
+                            self.window['OPP_CONCEDE_RADIO'].update(visible=False)
+                            self.window['OPP_DECKED_RADIO'].update(visible=False)
+                    except ValueError:
+                        self.window['OPPONENT_LIFE_INPUT'].update('0')
+
+            if event == 'PAUSE_BUTTON':
+                if not paused:
+                    self.game_timer.pause()
+                    paused = True
+                else:
+                    self.game_timer.unpause()
+                    paused = False

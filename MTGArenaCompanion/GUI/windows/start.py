@@ -1,7 +1,7 @@
 import PySimpleGUIQt as Qt
 
 from MTGArenaCompanion.GUI import GUI
-from MTGArenaCompanion.GUI.windows import add_new_deck, logging_win, timer
+from MTGArenaCompanion.GUI.windows import add_new_deck, logging_win, track_game
 
 WIN_TITLE = 'Start Window'
 
@@ -13,7 +13,7 @@ class StartWindow(GUI):
             [Qt.Menu(self.main_menu, pad=(135, 135))],
             [Qt.Button('Start New Match', key='START_NEW_BUTTON'), Qt.Button('Add a New Deck', key='NEW_DECK_BUTTON')],
             [Qt.Button('Preferences', key='PREFERENCES_BUTTON'), Qt.Button('Manage Decks', key='MANAGE_DECKS_BUTTON')],
-            [Qt.Button('View Stats', key='VIEW_STATS_BUTTON'), Qt.Button('Quit', key='QUIT_BUTTON')]
+            [Qt.Button('View Stats', key='VIEW_STATS_BUTTON'), Qt.Button('Quit', key='QUIT_BUTTON')],
         ]
 
         return _
@@ -30,12 +30,12 @@ class StartWindow(GUI):
         log_name = self.swin_logname + '.run_window'
         log = self.inspy_logger.getLogger(log_name)
 
-        Qt.theme('Material2')
+        Qt.theme('LightBlue3')
 
         window = Qt.Window('MTGArena Companion - ' + WIN_TITLE, layout=self.__button_frame__(), force_toplevel=True,
                            keep_on_top=True, no_titlebar=True, grab_anywhere=True)
 
-        buttons_not_implemented = ['START_NEW_BUTTON', 'PREFERENCES_BUTTON', 'MANAGE_DECKS_BUTTON', 'VIEW_STATS_BUTTON']
+        buttons_not_implemented = ['PREFERENCES_BUTTON', 'MANAGE_DECKS_BUTTON', 'VIEW_STATS_BUTTON']
 
         while True:
             event, vals = window.read(timeout=10)
@@ -50,6 +50,15 @@ class StartWindow(GUI):
                     break
 
                 break
+
+            if event == 'START_NEW_BUTTON' or event == "TIMER":
+                if not self.check_if_active(track_game.WIN_TITLE):
+                    self.add_active(track_game.WIN_TITLE)
+                    duel_track_win = track_game.MainGameWin(self.log)
+                    window.hide()
+                    duel_track_win.run()
+                    self.rem_active(track_game.WIN_TITLE)
+                    window.un_hide()
 
             if event in buttons_not_implemented:
                 self.not_yet_implemented_popup('This feature')
@@ -82,15 +91,8 @@ class StartWindow(GUI):
                     self.rem_active(log_win.WIN_TITLE)
                     window.un_hide()
 
-            if event == 'TIMER':
-                if not self.check_if_active(timer.WIN_TITLE):
-                    self.add_active(timer.WIN_TITLE)
-                    duel_track_win = timer.MainGameWin()
-                    window.hide()
-                    duel_track_win.run()
-                    self.rem_active(timer.WIN_TITLE)
-                    window.un_hide()
-
-    def __init__(self):
+    def __init__(self, log_device):
+        super().__init__(log_device)
+        print(dir(self))
         self.swin_logname = self.log_name + '.' + WIN_TITLE.replace(' ', '')
         self.swin_log = self.inspy_logger.getLogger(self.swin_logname)

@@ -4,14 +4,17 @@ from inspy_logger import InspyLogger
 
 from MTGArenaCompanion import MTGACApp
 from MTGArenaCompanion.GUI.menus import main_menu_struct
+from MTGArenaCompanion import DEFAULT_DATA_DIR
+
+data_dir = DEFAULT_DATA_DIR
 
 
 class GUI(MTGACApp):
     inspy_logger = inspy_logger
     #
     log_name = 'MTGArenaCompanion.GUI'
-    # log_device = InspyLogger(log_name, 'debug')
-    # log = log_device.start()
+    log_device = InspyLogger(log_name, 'debug')
+    log = log_device.start()
 
     active_windows = []
     main_menu = main_menu_struct
@@ -36,5 +39,5 @@ class GUI(MTGACApp):
         statement = f"{feature} has yet to be implemented, check back soon!"
         Qt.PopupError(statement, title=title)
 
-    def __init__(self):
-        pass
+    def __init__(self, log_device):
+        self.log_device = log_device

@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from inspy_logger import LEVELS as LOG_LEVELS
 from MTGArenaCompanion import MTGACApp
-
+from pathlib import Path
 
 class ArgParser(ArgumentParser, MTGACApp):
     arguments = None
