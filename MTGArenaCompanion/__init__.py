@@ -3,6 +3,8 @@ import PySimpleGUIQt as Qt
 from os import makedirs
 from pathlib import Path
 
+from .lib.errors import *  # All custom exceptions for this application are defined here
+
 DEFAULT_DATA_DIR = str(
     Path("~/Inspyre-Softworks/MTGA-Companion/data").expanduser())
 
@@ -61,7 +63,14 @@ class MTGACApp(object):
             cache = self.__default_cache__()
             directory = Qt.PopupGetFolder(
                 '', default_path=cache['app_data']['conf_dir'])
+
+            if directory is None:
+                statement = "MTGArena Companion must have a designated directory in which to place crucial files." \
+                            "\n\nOnce you've determined where that should be, please run the program again. "
+                raise ConfigAvailabilityError
+
             makedirs(directory, exist_ok=True)
+
             print(directory)
             new_directory = str(Path(directory).expanduser().resolve())
 

@@ -3,7 +3,7 @@ from threading import Thread
 from time import time, sleep
 
 from MTGArenaCompanion.GUI import GUI, Qt
-from MTGArenaCompanion.duel_track.timers import Timer
+from inspyre_toolbox import live_timer as timekeep
 
 WIN_TITLE = 'Duel In Progress'
 
@@ -11,7 +11,7 @@ WIN_TITLE = 'Duel In Progress'
 class MainGameWin(GUI):
     window = None
 
-    game_timer = Timer()
+    game_timer = timekeep.Timer()
 
     pause_button_text = "Pause"
 
